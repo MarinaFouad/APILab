@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -125,31 +125,34 @@
 
 
 
-            $("#updateDept").click(function(){
-                var deptId = $("#deptId").val();
-                var deptData = {
-                    name: $("#deptName").val(),
-                    mangerName: $("#managerName").val(),
-                    location: $("#location").val()
-                };
+         
+            $("#btnUpdate").click(function(){
+        var deptId = $("#updateId").val();
+        var deptData = {
+            id: parseInt(deptId),
+            name: $("#updateName").val(),
+            mangerName: $("#updateManagerName").val(),
+            location: $("#updateLocation").val()
+        };
 
-                $.ajax({
-                    
-                    url: "http://localhost:5032/api/Department/" + deptId,
-                    type: "PUT",
-                    contentType: "application/json",
-                    data: JSON.stringify(deptData),
-                    success: function(response) {
-                        console.log(response.msg);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error occurred while creating department:", error);
-                        // Display error message
-                        alert("Error: Name must be Unique and Location in EG or USA only ");
-                    }
-                    
-                });
-            });
+        $.ajax({
+            url: "http://localhost:5032/api/Department",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(deptData),
+            success: function(response) {
+                console.log(response.msg); 
+                
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred while updating department:", error);
+                
+                alert(" Please try again later.");
+            }
+        });
+    });
+
+            
         });
     </script>
     
@@ -198,12 +201,21 @@
             <button id="createDept" class="btn btn-info">Create Department</button>
         </div>
         <div class="col">
-            <label for="deptId" class="form-label text-success">Department Id:</label>
-            <input type="text" id="deptId" class="form-control" placeholder="If Update needed onlyyyyy"><br>
-            <button id="updateDept" class="btn btn-danger">Update Department</button>
+            <h2>Update Department</h2>
+            <label for="updateId" class="form-label text-success">Department ID:</label>
+            <input type="text" id="updateId" class="form-control" placeholder="Enter Department ID"><br>
+            <label for="updateName" class="form-label text-success">Department Name:</label>
+            <input type="text" id="updateName" class="form-control" placeholder="Enter Department Name"><br>
+            <label for="updateManagerName" class="form-label text-success">Manager Name:</label>
+            <input type="text" id="updateManagerName" class="form-control" placeholder="Enter Manager Name"><br>
+            <label for="updateLocation" class="form-label text-success">Location:</label>
+            <input type="text" id="updateLocation" class="form-control" placeholder="Enter Location"><br>
+            <button id="btnUpdate" class="btn btn-warning">Update Department</button>
         </div>
+        
    
 </div>
+
 
     <script src="https://kit.fontawesome.com/95758d30be.js" crossorigin="anonymous"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"
