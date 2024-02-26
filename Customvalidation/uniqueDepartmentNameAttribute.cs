@@ -10,8 +10,12 @@ namespace Lab1.CustomValidation
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var db = (IDepartmentRepo)validationContext.GetService(typeof(IDepartmentRepo));
-            var departmentName = (string)value;
+             var db = (IDepartmentRepo)validationContext.GetService(typeof(IDepartmentRepo));
+             var departmentName = (string)value;
+            
+             
+             var departmentId = (int)validationContext.ObjectInstance.GetType().GetProperty("Id").GetValue(validationContext.ObjectInstance);
+             var department = db.GetById(departmentId);
 
             if (db.GetAll().Any(d => d.Name == departmentName))
             {
