@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "bWznfV2xzbwdDhYxfGhEqmSD5F2xrSlA+Mj6BP4Tsq4=",
+  "Source": "Lab1",
+  "BasePath": "_content/Lab1",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Lab1\\wwwroot",
+      "Source": "Lab1",
+      "ContentRoot": "D:\\ITI-dotNet\\API\\Lab1 - Copy\\wwwroot\\",
+      "BasePath": "_content/Lab1",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

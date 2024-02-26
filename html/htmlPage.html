@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>
+        $(document).ready(function(){
+            $("#GetAllDept").click(function(){
+                $.ajax({
+                    url: "http://localhost:5032/api/Department",
+                    success: function (result) {
+                        var div1 = $("#div1");
+                        var html = "<h2>Departments Details:</h2>";
+    
+                        result.forEach(function (department) {
+                            html += "<div>" +
+                                "<h3>Department Details:</h3>" +
+                                "Department Number: " + department.department_Number + "<br/>" +
+                                "Department Name: " + department.department_Name + "<br/>" +
+                                "Manager Name: " + department.manager_Name + "<br/>" +
+                                "Location: " + department.location + "<br/>";
+    
+                            if (department.student_Name.length > 0) {
+                                html += "<h3>Students:</h3>";
+                                department.student_Name.forEach(function (student) {
+                                    html += "<div>" +
+                                        "Student Name: " + student + "<br/>" +
+                                        "</div>";
+                                });
+                            } else {
+                                html += "<p>No students in this department.</p>";
+                            }
+    
+                            html += "</div><br/>";
+                        });
+    
+                        div1.html(html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error occurred while fetching data:", error);
+                    }
+                });
+            });
+    
+            $("#deleteDept").click(function(){
+                var deptId = $("#deptId").val();
+                $.ajax({
+                    url: "http://localhost:5032/api/Department/" + deptId,
+                    type: "DELETE",
+                    success: function(response) {
+                        console.log(response.msg);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error occurred while deleting department:", error);
+                    }
+                });
+            });
+    
+            $("#GetDept").click(function(){
+                var deptId = $("#deptId").val();
+                $.ajax({
+                    url: "http://localhost:5032/api/Department/" + deptId,
+                    success: function(response) {
+                        var div2 = $("#div2");
+                        var html = "<h2>Department Details:</h2>";
+    
+                        if (response.deptWithStudents !== undefined) {
+                            html += "<div>" +
+                                "<h3>Department Details:</h3>" +
+                                "Department Number: " + response.deptWithStudents.department_Number + "<br/>" +
+                                "Department Name: " + response.deptWithStudents.department_Name + "<br/>" +
+                                "Manager Name: " + response.deptWithStudents.manager_Name + "<br/>" +
+                                "Location: " + response.deptWithStudents.location + "<br/>";
+    
+                            if (response.deptWithStudents.student_Name.length > 0) {
+                                html += "<h3>Students:</h3>";
+                                response.deptWithStudents.student_Name.forEach(function (student) {
+                                    html += "<div>" +
+                                        "Student Name: " + student + "<br/>" +
+                                        "</div>";
+                                });
+                            } else {
+                                html += "<p>No students in this department.</p>";
+                            }
+                        } else {
+                            html += "<p>Department not found.</p>";
+                        }
+    
+                        html += "</div><br/>";
+                        div2.html(html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error occurred while fetching department details:", error);
+                    }
+                });
+            });
+
+
+            $("#createDept").click(function(){
+                var deptData = {
+                    
+                    name: $("#deptName").val(),
+                    mangerName: $("#managerName").val(),
+                    location: $("#location").val()
+                };
+
+                $.ajax({
+                    url: "http://localhost:5032/api/Department",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(deptData),
+                    success: function(response) {
+                        console.log(response.msg);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error occurred while creating department:", error);
+                        // Display error message
+                        alert("Error: Name must be Unique and Location in EG or USA only ");
+                    }
+                    
+                });
+            });
+
+
+
+            $("#updateDept").click(function(){
+                var deptId = $("#deptId").val();
+                var deptData = {
+                    name: $("#deptName").val(),
+                    mangerName: $("#managerName").val(),
+                    location: $("#location").val()
+                };
+
+                $.ajax({
+                    
+                    url: "http://localhost:5032/api/Department/" + deptId,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(deptData),
+                    success: function(response) {
+                        console.log(response.msg);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error occurred while creating department:", error);
+                        // Display error message
+                        alert("Error: Name must be Unique and Location in EG or USA only ");
+                    }
+                    
+                });
+            });
+        });
+    </script>
+    
+</head>
+<br>
+   
+    
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <input type="text" id="deptId" class="form-control" placeholder="Enter Department ID">
+        </div>
+        <div class="col">
+            <button id="deleteDept" class="btn btn-primary">Delete Department</button>
+        </div>
+        <div class="col">
+            <button id="GetDept" class="btn btn-success">Department Details</button>
+        </div>
+        <div class="col">
+            <button id="GetAllDept" class="btn btn-success">Get All Departments</button>
+        </div>
+    </div>
+
+    
+        <div class="col">
+            <div id="div2"></div>
+        </div>
+   
+    
+    
+        <div class="col">
+            <div id="div1"></div>
+        </div>
+   
+
+    
+        <div class="col">
+            <h2>Create New Department or Update:</h2>
+            <label for="deptName" class="form-label text-success">Department Name:</label>
+            <input type="text" id="deptName" class="form-control"><br>
+            <label for="managerName" class="form-label text-success">Manager Name:</label>
+            <input type="text" id="managerName" class="form-control"><br>
+            <label for="location" class="form-label text-success">Location:</label>
+            <input type="text" id="location" class="form-control"><br>
+            <button id="createDept" class="btn btn-info">Create Department</button>
+        </div>
+        <div class="col">
+            <label for="deptId" class="form-label text-success">Department Id:</label>
+            <input type="text" id="deptId" class="form-control" placeholder="If Update needed onlyyyyy"><br>
+            <button id="updateDept" class="btn btn-danger">Update Department</button>
+        </div>
+   
+</div>
+
+    <script src="https://kit.fontawesome.com/95758d30be.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"
+        integrity="sha512-72WD92hLs7T5FAXn3vkNZflWG6pglUDDpm87TeQmfSg8KnrymL2G30R7as4FmTwhgu9H7eSzDCX3mjitSecKnw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
